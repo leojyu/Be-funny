@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>这是一个在HTML中的&lt;title&gt;标签</title>
+    <!-- 中文 Black 900 + 英文 Black 900 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@900&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --card-bg: #ffffff;
+            --primary: #4f6ef7;
+            --primary-hover: #3b56e0;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --border-focus: #4f6ef7;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-weight: 900; /* 全局最粗 */
+            background: linear-gradient(135deg, #e9eff7 0%, #f4f1f9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .register-card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 420px;
+            padding: 2.5rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-header h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 900; /* 输入文字也最粗 */
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: #fafbfc;
+            color: var(--text);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            font-weight: 500; /* 占位符稍微细一点，便于区分 */
+            color: #94a3b8;
+        }
+
+        .input-field:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.15);
+            background: #ffffff;
+        }
+
+        .joke-message {
+            font-size: 0.8rem;
+            font-weight: 900;
+            margin-top: 0.4rem;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.2s, transform 0.2s;
+            height: 0;
+            overflow: hidden;
+            color: #b91c1c;
+        }
+
+        .joke-message.show {
+            opacity: 1;
+            transform: translateY(0);
+            height: auto;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: var(--primary);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 900;
+            font-family: inherit;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background 0.25s, transform 0.1s;
+            margin-top: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 450px) {
+            .register-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-card">
+        <div class="card-header">
+            <h1>创建账号</h1>
+        </div>
+
+        <form id="registerForm" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="username">用户名</label>
+                <input type="text" id="username" class="input-field" placeholder="请输入用户名" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="gender">性别</label>
+                <input type="text" id="gender" class="input-field" placeholder="请输入性别" autocomplete="off">
+                <div class="joke-message" id="genderJoke"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="age">年龄</label>
+                <input type="number" id="age" class="input-field" placeholder="请输入年龄" autocomplete="off">
+                <div class="joke-message" id="ageJoke"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">立即注册</button>
+        </form>
+    </div>
+
+    <script>
+        (function() {
+            const form = document.getElementById('registerForm');
+            const usernameInput = document.getElementById('username');
+            const genderInput = document.getElementById('gender');
+            const ageInput = document.getElementById('age');
+            const genderJoke = document.getElementById('genderJoke');
+            const ageJoke = document.getElementById('ageJoke');
+
+            function hideAllJokes() {
+                [genderJoke, ageJoke].forEach(joke => {
+                    joke.classList.remove('show');
+                    joke.textContent = '';
+                });
+            }
+
+            function showRedJoke(jokeElement, text) {
+                jokeElement.textContent = text;
+                jokeElement.classList.add('show');
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                hideAllJokes();
+
+                const username = usernameInput.value.trim();
+                const gender = genderInput.value.trim();
+                const age = ageInput.value.trim();
+
+                if (gender) showRedJoke(genderJoke, '性别已被占用');
+                if (age) showRedJoke(ageJoke, '年龄已被占用');
+
+                const userData = {
+                    username: username || '',
+                    gender: gender || '',
+                    age: age ? parseInt(age, 10) : null
+                };
+                console.log('注册数据:', userData);
+            });
+        })();
+    </script>
+</body>
+</html>
